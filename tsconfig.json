@@ -1,7 +1,12 @@
 {
     "compilerOptions": {
+        // Compilação de ts para js
         "outDir": "./dist",
-        "module": "commonjs"
+        // forma de importação, quando for compilado de ts para js vai trocar import e export por export module e required
+        "module": "commonjs",
+        "target": "ES2019",
+        "esModuleInterop": true,
+        "allowJs": true,
     },
     
 }
