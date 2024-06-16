@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "test:staged": "jest",
     "lint": "tslint -p tsconfig.json",
     "lint:fix": "tslint -p tsconfig.json --fix"
   },
@@ -24,5 +25,8 @@
     "ts-jest": "^29.1.5",
     "tslint": "^6.1.3",
     "typescript": "^5.4.5"
+  },
+  "dependencies": {
+    "ts-node": "^10.9.2"
   }
 }
