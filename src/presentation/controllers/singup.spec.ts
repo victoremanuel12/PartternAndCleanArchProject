@@ -24,7 +24,7 @@ const makeEmailValidatorWithError = (): EmailValidator => {
     return new EmailVlalidatorStub();
 }
 const makeSut = (): SutTypes => {
-    const emailValidatorStub =  makeEmailValidator();
+    const emailValidatorStub = makeEmailValidator();
     const sut = new SignUpController(emailValidatorStub);
     return {
         sut,
@@ -85,21 +85,20 @@ describe('SingUp Controller', () => {
         expect(httpResponse.statusCode).toBe(400);
         expect(httpResponse.body).toEqual(new MissingParamError('password_confirmation'))
     })
-    test('Should return 400 if an invalid email is provider', () => {
-        const { sut, emailValidatorStub } = makeSut();
-        jest.spyOn(emailValidatorStub, 'isValid').mockReturnValueOnce(false);
+    test('Should return 400 if password confirmation fails', () => {
+        const { sut } = makeSut();
         const httpRequest = {
             body: {
                 name: 'any_name',
-                email: 'invalid_email',
+                email: 'any_email',
                 password: 'any_password',
-                password_confirmation: 'any_password_confirmation'
-            }
-        }
+                password_confirmation: 'invalid_password',
+            },
+        };
         const httpResponse = sut.handle(httpRequest);
         expect(httpResponse.statusCode).toBe(400);
-        expect(httpResponse.body).toEqual(new InvalidParamError('email'))
-    })
+        expect(httpResponse.body).toEqual(new InvalidParamError('password_confirmation'));
+    });
     test('Should call email  validator with correct email', () => {
         const { sut, emailValidatorStub } = makeSut();
         const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
@@ -115,7 +114,14 @@ describe('SingUp Controller', () => {
         expect(isValidSpy).toHaveBeenCalledWith('any_email@gmail.com')
     })
     test('Should return 500 if EmailValidator throws', () => {
-        const emailValidatorStub =  makeEmailValidatorWithError();
+        // temos um metodo factory para criar uma classe e lançar um error
+        // porem com jest podemos usar o metodo fabrica anterior e usar o mockImplementationOnce e mudar o retornod o metodo inicial
+        // seria assim: 
+        // const { sut, emailValidatorStub } = makeSut();
+        // jest.spyOn(emailValidatorStub,'isValid').mockImplementationOnce(() =>{ 
+        //     throw new Error()
+        // })
+        const emailValidatorStub = makeEmailValidatorWithError();
         const sut = new SignUpController(emailValidatorStub);
         const httpRequest = {
             body: {
