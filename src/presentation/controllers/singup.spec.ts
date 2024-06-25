@@ -1,6 +1,4 @@
-import { InvalidParamError } from "../erros/invalid-param-error";
-import { MissingParamError } from "../erros/missing-param-error";
-import { ServerError } from "../erros/server.error";
+import { MissingParamError, ServerError, InvalidParamError } from "../erros";
 import { EmailValidator } from "../protocols/email-validator";
 import SignUpController from "./singup";
 interface SutTypes {
@@ -114,7 +112,7 @@ describe('SingUp Controller', () => {
             body: {
                 name: "any_name",
                 email: "any_email",
-                password: "any_password",                                                   
+                password: "any_password",
                 password_confirmation: "any_password_confirmation",
             },
         };
