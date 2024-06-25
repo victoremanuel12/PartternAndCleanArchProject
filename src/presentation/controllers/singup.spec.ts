@@ -5,19 +5,33 @@ interface SutTypes {
     sut: SignUpController
     emailValidatorStub: EmailValidator
 }
-const makeSut = (): SutTypes => {
-    class EmailValidatorMock implements EmailValidator {
+const makeEmailValidator = (): EmailValidator => {
+    class EmailVlalidatorStub implements EmailValidator {
         isValid(email: string): boolean {
             return true;
         }
+
     }
-    const emailValidatorStub = new EmailValidatorMock();
+    return new EmailVlalidatorStub();
+}
+const makeEmailValidatorWithError = (): EmailValidator => {
+    class EmailVlalidatorStub implements EmailValidator {
+        isValid(email: string): boolean {
+            throw new Error()
+        }
+
+    }
+    return new EmailVlalidatorStub();
+}
+const makeSut = (): SutTypes => {
+    const emailValidatorStub =  makeEmailValidator();
     const sut = new SignUpController(emailValidatorStub);
     return {
         sut,
         emailValidatorStub,
     };
 }
+
 describe('SingUp Controller', () => {
     test('Should return 400 if no name is provider', () => {
         const { sut } = makeSut();
@@ -100,13 +114,8 @@ describe('SingUp Controller', () => {
         sut.handle(httpRequest);
         expect(isValidSpy).toHaveBeenCalledWith('any_email@gmail.com')
     })
-    test('Should call email  validator with correct email', () => {
-        class EmailValidatorMock implements EmailValidator {
-            isValid(email: string): boolean {
-                throw new Error()
-            }
-        }
-        const emailValidatorStub = new EmailValidatorMock();
+    test('Should return 500 if EmailValidator throws', () => {
+        const emailValidatorStub =  makeEmailValidatorWithError();
         const sut = new SignUpController(emailValidatorStub);
         const httpRequest = {
             body: {
