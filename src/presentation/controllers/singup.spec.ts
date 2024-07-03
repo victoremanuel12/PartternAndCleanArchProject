@@ -1,12 +1,12 @@
 import { AccountModel } from "../../domain/models/account";
-import { AddAccount, AddAccountModel } from '../../domain/useCases/add-account';
+import { IAddAccount, AddAccountModel } from '../../domain/useCases/IAdd-account';
 import { MissingParamError, ServerError, InvalidParamError } from "../erros";
 import SignUpController from "./singup";
 import { EmailValidator } from "./singup/singup-protocols";
 interface SutTypes {
     sut: SignUpController
     emailValidatorStub: EmailValidator
-    addAccountStub: AddAccount
+    addAccountStub: IAddAccount
 }
 const makeSut = (): SutTypes => {
     const emailValidatorStub = makeEmailValidator();
@@ -36,15 +36,14 @@ const makeEmailValidatorWithError = (): EmailValidator => {
     }
     return new EmailVlalidatorStub();
 }
-const makeAddAccount = (): AddAccount => {
-    class AddAccountStub implements AddAccount {
+const makeAddAccount = (): IAddAccount => {
+    class AddAccountStub implements IAddAccount {
         add(account: AddAccountModel) : AccountModel {
             const fakeAccount = { 
                 id:'valid_id',
                 name: 'any_name',
                 email: 'any_email',
                 password: 'any_password',
-                password_confirmation: 'any_password_confirmation'
             }
             return fakeAccount
         }
@@ -191,5 +190,23 @@ describe('SingUp Controller', () => {
         expect(httpResponse.statusCode).toBe(500);
         expect(httpResponse.body).toEqual(new ServerError())
     })
-    
+    test('Should return 200 if valid data is provided', () => {
+        const { sut } = makeSut();
+        const httpRequest = {
+            body: {
+                name: 'any_name',
+                email: 'any_email',
+                password: 'any_password',
+                password_confirmation: 'any_password'
+            }
+        }
+        const httpResponse = sut.handle(httpRequest);
+        expect(httpResponse.statusCode).toBe(200);
+        expect(httpResponse.body).toEqual({
+            id: 'valid_id',
+            name: 'any_name',
+            email: 'any_email',
+            password: 'any_password',
+        })
+    })
 })
