@@ -28,7 +28,5 @@ export default class SignUpController implements Controller {
         } catch (error) {
             return serverError()
         }
-
-        
     }
 }
