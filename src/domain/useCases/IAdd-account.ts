@@ -5,6 +5,6 @@ export interface AddAccountModel  {
     email: string;
     password: string;
 }
-export interface AddAccount { 
+export interface IAddAccount { 
     add(account : AddAccountModel) : AccountModel;
 }
