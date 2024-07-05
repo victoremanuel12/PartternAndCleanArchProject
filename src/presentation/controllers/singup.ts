@@ -1,17 +1,17 @@
 import { IAddAccount } from "../../domain/useCases/IAdd-account"
 import { MissingParamError, InvalidParamError } from "../erros"
 import { badRequest, ok, serverError } from "../helpers/http-helper"
-import { HttpRequest, HttpResponse, Controller } from "../protocols"
+import { HttpRequest, HttpResponse, IController } from "../protocols"
 import { EmailValidator } from "./singup/singup-protocols"
 
-export default class SignUpController implements Controller {
+export default class SignUpController implements IController {
     private readonly emailValidator: EmailValidator
     private readonly addAccount: IAddAccount
     constructor(emailValidator: EmailValidator, addAccount: IAddAccount) {
         this.emailValidator = emailValidator
         this.addAccount = addAccount
     }
-    handle(httpRequest: HttpRequest): HttpResponse {
+    async handle(httpRequest: HttpRequest): Promise<HttpResponse> {
         try {
             const requeredFild = ['name', 'email', 'password', 'password_confirmation']
             for (const fild of requeredFild) {
@@ -24,7 +24,7 @@ export default class SignUpController implements Controller {
             if (password !== password_confirmation) {
                 return badRequest(new InvalidParamError('password_confirmation'))
             }
-            const account = this.addAccount.add({ name, email, password })
+            const account = await this.addAccount.add({ name, email, password })
             return ok(account)
         } catch (error) {
             return serverError()
