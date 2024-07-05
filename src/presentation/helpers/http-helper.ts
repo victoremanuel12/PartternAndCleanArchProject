@@ -1,4 +1,4 @@
-import { ServerError } from '../erros/server.error';
+import { ServerError } from '../erros';
 import { HttpResponse } from '../protocols/http';
 // () apos a => ({}) o type entende que é um return
 export const badRequest = (error: Error): HttpResponse => ({
