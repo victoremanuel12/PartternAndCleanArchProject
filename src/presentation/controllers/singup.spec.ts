@@ -27,15 +27,15 @@ const makeEmailValidator = (): IEmailValidator => {
     }
     return new EmailVlalidatorStub();
 }
-const makeEmailValidatorWithError = (): IEmailValidator => {
-    class EmailVlalidatorStub implements IEmailValidator {
-        isValid(email: string): boolean {
-            throw new Error()
-        }
+// const makeEmailValidatorWithError = (): IEmailValidator => {
+//     class EmailVlalidatorStub implements IEmailValidator {
+//         isValid(email: string): boolean {
+//             throw new Error()
+//         }
 
-    }
-    return new EmailVlalidatorStub();
-}
+//     }
+//     return new EmailVlalidatorStub();
+// }
 const makeAddAccount = (): IAddAccount => {
     class AddAccountStub implements IAddAccount {
         async add(account: AddAccountModel) : Promise<AccountModel> {
