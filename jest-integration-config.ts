@@ -1,5 +1,8 @@
-import config from './jest.config';
+import baseConfig from './jest.config';
+import type { Config } from '@jest/types';
 
-config.testMatch = ['**/*.test.ts'];
-
+const config: Config.InitialOptions = {
+  ...baseConfig,
+  testMatch: ['**/*.test.ts'],
+};
 export default config;
