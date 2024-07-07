@@ -2,10 +2,10 @@ import { AccountModel } from "../../domain/models/account";
 import { IAddAccount, AddAccountModel } from '../../domain/useCases/IAdd-account';
 import { MissingParamError, ServerError, InvalidParamError } from "../erros";
 import SignUpController from "./singup";
-import { EmailValidator } from "./singup/singup-protocols";
+import { IEmailValidator } from "./singup/singup-protocols";
 interface SutTypes {
     sut: SignUpController
-    emailValidatorStub: EmailValidator
+    emailValidatorStub: IEmailValidator
     addAccountStub: IAddAccount
 }
 const makeSut = (): SutTypes => {
@@ -18,8 +18,8 @@ const makeSut = (): SutTypes => {
         addAccountStub
     };
 }
-const makeEmailValidator = (): EmailValidator => {
-    class EmailVlalidatorStub implements EmailValidator {
+const makeEmailValidator = (): IEmailValidator => {
+    class EmailVlalidatorStub implements IEmailValidator {
         isValid(email: string): boolean {
             return true;
         }
@@ -27,8 +27,8 @@ const makeEmailValidator = (): EmailValidator => {
     }
     return new EmailVlalidatorStub();
 }
-const makeEmailValidatorWithError = (): EmailValidator => {
-    class EmailVlalidatorStub implements EmailValidator {
+const makeEmailValidatorWithError = (): IEmailValidator => {
+    class EmailVlalidatorStub implements IEmailValidator {
         isValid(email: string): boolean {
             throw new Error()
         }

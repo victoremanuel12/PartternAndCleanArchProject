@@ -2,12 +2,12 @@ import { IAddAccount } from "../../domain/useCases/IAdd-account"
 import { MissingParamError, InvalidParamError } from "../erros"
 import { badRequest, ok, serverError } from "../helpers/http-helper"
 import { HttpRequest, HttpResponse, IController } from "../protocols"
-import { EmailValidator } from "./singup/singup-protocols"
+import { IEmailValidator } from "./singup/singup-protocols"
 
 export default class SignUpController implements IController {
-    private readonly emailValidator: EmailValidator
+    private readonly emailValidator: IEmailValidator
     private readonly addAccount: IAddAccount
-    constructor(emailValidator: EmailValidator, addAccount: IAddAccount) {
+    constructor(emailValidator: IEmailValidator, addAccount: IAddAccount) {
         this.emailValidator = emailValidator
         this.addAccount = addAccount
     }
